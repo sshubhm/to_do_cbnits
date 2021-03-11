@@ -141,6 +141,17 @@ class _TasksScreenState extends State<TasksScreen> {
     });
   }
 
+  onTaskTileTap(index) {
+    List<Task> tempTask = [...tasks];
+    tempTask.forEach((element) {
+      element.isEditing = false;
+    });
+    tempTask[index].isEditing = !tempTask[index].isEditing!;
+    setState(() {
+      tasks = tempTask;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -191,6 +202,7 @@ class _TasksScreenState extends State<TasksScreen> {
           onDeleteTask: onDeleteTask,
           addNewTask: addNewTask,
           onAddTask: onAddTask,
+          onTaskTileTap: onTaskTileTap,
         ),
         floatingActionButton: !addNewTask
             ? FloatingActionButton(

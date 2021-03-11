@@ -3,53 +3,40 @@ import 'package:to_do_cbnits/models/task.dart';
 
 import 'input_field.dart';
 
-class TaskListTile extends StatefulWidget {
+class TaskListTile extends StatelessWidget {
+  bool isSelected = false;
+
   final Task? task;
   final Function? onCheckBoxTap;
   final Function? onTaskDelete;
   final Function? onEditTask;
+  final Function? onTaskTileTap;
 
   TaskListTile(
-      {this.task, this.onCheckBoxTap, this.onTaskDelete, this.onEditTask});
-
-  @override
-  _TaskListTileState createState() => _TaskListTileState();
-}
-
-class _TaskListTileState extends State<TaskListTile> {
-  bool isSelected = false;
-  bool isEditing = false;
+      {this.task,
+      this.onCheckBoxTap,
+      this.onTaskDelete,
+      this.onEditTask,
+      this.onTaskTileTap});
 
   var editingController = TextEditingController();
   var editingFocusNode = FocusNode();
 
   @override
-  void initState() {
-    super.initState();
-    editingFocusNode.addListener(() {
-      if (!editingFocusNode.hasFocus) {
-        setState(() {
-          isEditing = false;
-        });
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    isSelected = widget.task!.isCompleted!;
+    isSelected = task!.isCompleted!;
+    if (task!.isEditing!) {
+      editingController.text = task!.description!;
+    }
     return GestureDetector(
       onTap: () {
+        onTaskTileTap!();
         editingFocusNode.requestFocus();
-        editingController.text = widget.task!.description!;
-        setState(() {
-          isEditing = true;
-        });
       },
-      child: isEditing
+      child: task!.isEditing!
           ? InputField(
               onAddTask: (value) {
-                widget.onEditTask!(value);
+                onEditTask!(value);
               },
               focusNode: editingFocusNode,
               controller: editingController,
@@ -59,9 +46,9 @@ class _TaskListTileState extends State<TaskListTile> {
               child: Dismissible(
                 direction: DismissDirection.endToStart,
                 onDismissed: (direction) {
-                  widget.onTaskDelete!();
+                  onTaskDelete!();
                 },
-                key: Key(widget.task!.createdAt.toString()),
+                key: Key(task!.createdAt.toString()),
                 background: Container(
                   color: Colors.white,
                 ),
@@ -89,14 +76,11 @@ class _TaskListTileState extends State<TaskListTile> {
                         Checkbox(
                           value: isSelected,
                           onChanged: (value) {
-                            setState(() {
-                              isSelected = value!;
-                            });
-                            widget.onCheckBoxTap!();
+                            onCheckBoxTap!();
                           },
                         ),
                         Text(
-                          widget.task!.description!,
+                          task!.description!,
                           style: TextStyle(
                             decoration: isSelected
                                 ? TextDecoration.lineThrough

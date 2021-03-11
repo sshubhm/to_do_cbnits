@@ -11,6 +11,7 @@ class Body extends StatelessWidget {
   final Function? onDeleteTask;
   final FocusNode? addTaskFocusNode;
   final Function? onEditTask;
+  final Function? onTaskTileTap;
 
   var controller = TextEditingController();
 
@@ -21,7 +22,8 @@ class Body extends StatelessWidget {
       this.onCheckBoxTap,
       this.onDeleteTask,
       this.addTaskFocusNode,
-      this.onEditTask});
+      this.onEditTask,
+      this.onTaskTileTap});
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,10 @@ class Body extends StatelessWidget {
           child: ListView.builder(
             itemBuilder: (context, index) {
               return TaskListTile(
+                onTaskTileTap: () {
+                  print('tap');
+                  onTaskTileTap!(index);
+                },
                 onEditTask: (value) {
                   onEditTask!(value, index);
                 },
