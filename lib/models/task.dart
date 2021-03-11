@@ -5,6 +5,7 @@ class Task {
   bool? isCompleted;
   DateTime? updatedAt;
   int? id;
+  bool? isEditing = false;
 
   Task();
 

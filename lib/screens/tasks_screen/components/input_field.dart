@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 class InputField extends StatelessWidget {
   final TextEditingController? controller;
   final Function? onAddTask;
+  final String? labelText;
+  final FocusNode? focusNode;
 
-  const InputField({this.controller, this.onAddTask});
+  const InputField(
+      {this.controller, this.onAddTask, this.labelText, this.focusNode});
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +18,14 @@ class InputField extends StatelessWidget {
         elevation: 2,
         child: TextField(
           textInputAction: TextInputAction.go,
+          focusNode: focusNode,
           onSubmitted: (value) {
             onAddTask!(value);
           },
           controller: controller,
           autofocus: true,
           decoration: InputDecoration(
-            labelText: "Add New Task",
+            labelText: labelText == null ? null : "Add New Task",
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide.none,
             ),

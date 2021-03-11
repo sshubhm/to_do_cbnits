@@ -31,17 +31,12 @@ class NetworkUtility {
 
   addNewTask({Task? task}) async {
     var url = baseUrl + "users/$userId/tasks";
-    print(jsonEncode({"task": task}));
-    print(url);
     var response = await client.post(Uri.parse(url),
         body: jsonEncode({"task": task}),
         headers: {"content-type": "application/json"});
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 201) {
       var res = jsonDecode(response.body);
       Task task = Task.fromJson(res);
-      print(task.isCompleted);
       return task;
     }
   }
@@ -63,14 +58,22 @@ class NetworkUtility {
     } else {
       url += "completed";
     }
-    print(url);
     var response = await client.put(Uri.parse(url));
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200) {
       var res = jsonDecode(response.body);
       Task task = Task.fromJson(res);
       return task;
+    }
+  }
+
+  updateTask({Task? task, String? description}) async {
+    var url = baseUrl + "users/$userId/tasks/${task!.id}/";
+    task.description = description;
+    var response = await client.put(Uri.parse(url),
+        body: jsonEncode({"task": task}),
+        headers: {"content-type": "application/json"});
+    if (response.statusCode == 200) {
+      return Task.fromJson(jsonDecode(response.body));
     }
   }
 }

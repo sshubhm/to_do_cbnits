@@ -9,6 +9,8 @@ class Body extends StatelessWidget {
   final Function? onAddTask;
   final Function? onCheckBoxTap;
   final Function? onDeleteTask;
+  final FocusNode? addTaskFocusNode;
+  final Function? onEditTask;
 
   var controller = TextEditingController();
 
@@ -17,7 +19,9 @@ class Body extends StatelessWidget {
       this.addNewTask,
       this.onAddTask,
       this.onCheckBoxTap,
-      this.onDeleteTask});
+      this.onDeleteTask,
+      this.addTaskFocusNode,
+      this.onEditTask});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +31,9 @@ class Body extends StatelessWidget {
           child: ListView.builder(
             itemBuilder: (context, index) {
               return TaskListTile(
+                onEditTask: (value) {
+                  onEditTask!(value, index);
+                },
                 onTaskDelete: () {
                   onDeleteTask!(index);
                 },
@@ -43,6 +50,8 @@ class Body extends StatelessWidget {
             ? InputField(
                 onAddTask: onAddTask,
                 controller: controller,
+                labelText: "Add New Task",
+                focusNode: addTaskFocusNode,
               )
             : Container()
       ],
